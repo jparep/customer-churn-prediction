@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Data files
+data/
+*.csv
+*.xlsx
+*.json
+*.parquet
+
+# Logs
+*.log
+*.out
+*.err
+
+# Docker
+*.pid
+
+# Build artifacts
+*.egg-info/
+build/
+dist/
+
+# IDE Specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Specific
+.DS_Store
+Thumbs.db
