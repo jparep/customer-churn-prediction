@@ -1,13 +1,13 @@
 from flask import Blueprint, request, jsonify
-import pickle
+import joblib
 import pandas as pd
 
 # Create Blueprint for API routes
 api = Blueprint('api', __name__)
 
 # Load trained model
-with open("models/churn_model.pkl", "rb") as model_file:
-    model = pickle.load(model_file)
+with open("models/churn_model.joblib", "rb") as model_file:
+    model = joblib.load(model_file)
 
 @api.route('/predict', methods=['POST'])
 def predict():
