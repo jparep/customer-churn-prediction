@@ -13,6 +13,37 @@ conn = snowflake.connector.connect(
     account=SNOWFLAKE_ACCOUNT,
     session_parameters={"MULTI_STATEMENT_COUNT": 3}  # Enable multi-statement execution
 )
+import snowflake.connector
+import os
+
+# Load Snowflake connection settings
+SNOWFLAKE_USER = os.getenv("SNOWFLAKE_USER")
+SNOWFLAKE_PASSWORD = os.getenv("SNOWFLAKE_PASSWORD")
+SNOWFLAKE_ACCOUNT = os.getenv("SNOWFLAKE_ACCOUNT")
+
+# Connect to Snowflake
+conn = snowflake.connector.connect(
+    user=SNOWFLAKE_USER,
+    password=SNOWFLAKE_PASSWORD,
+    account=SNOWFLAKE_ACCOUNT
+)
+
+# Read the SQL file
+with open("sql/load_data.sql", "r") as file:
+    sql_script = file.read()
+
+# Split the script into individual statements
+statements = sql_script.split(";")
+cursor = conn.cursor()
+
+# Execute each statement individually
+for statement in statements:
+    statement = statement.strip()  # Remove any leading/trailing spaces
+    if statement:  # Only execute non-empty statements
+        print(f"Executing: {statement}")
+        cursor.execute(statement)
+
+print("Database and table created successfully!")
 
 # Read the SQL file
 with open("sql/load_data.sql", "r") as file:
