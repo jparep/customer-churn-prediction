@@ -7,6 +7,10 @@ from sklearn.pipeline import Pipeline
 def load_data(file_path):
     """Load raw data from a CSV file."""
     data = pd.read_csv(file_path)
+    # Check for required columns
+    required_columns = {'customerID', 'Churn'}
+    if not required_columns.issubset(data.columns):
+        raise ValueError(f"Dataset must contain the following columns: {required_columns}")
     return data
 
 def preprocess_data(data):
