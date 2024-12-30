@@ -1,10 +1,11 @@
 import snowflake.connector
 import pandas as pd
+import os
 
-# Snowflake connection settings
-SNOWFLAKE_USER = "jpuser"
-SNOWFLAKE_PASSWORD = "jppw123"
-SNOWFLAKE_ACCOUNT = "jpacc"
+# Load Snowflake connection settings from environment variables
+SNOWFLAKE_USER = os.getenv("SNOWFLAKE_USER")
+SNOWFLAKE_PASSWORD = os.getenv("SNOWFLAKE_PASSWORD")
+SNOWFLAKE_ACCOUNT = os.getenv("SNOWFLAKE_ACCOUNT")
 
 # Connect to Snowflake
 conn = snowflake.connector.connect(
