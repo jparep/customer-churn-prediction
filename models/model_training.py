@@ -1,38 +1,57 @@
+import snowflake.connector
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
-import joblib
-from preprocessing import load_data, preprocess_data  # Import preprocessing functions
+import numpy as np
+import os
+from preprocessing import load_data
 
-# Load raw data
-raw_data_path = "data/raw/telco_customer_churn.csv"
-raw_data = load_data(raw_data_path)
+# Load Snowflake connection settings
+SNOWFLAKE_USER = os.getenv("SNOWFLAKE_USER")
+SNOWFLAKE_PASSWORD = os.getenv("SNOWFLAKE_PASSWORD")
+SNOWFLAKE_ACCOUNT = os.getenv("SNOWFLAKE_ACCOUNT")
 
-# Preprocess the data
-X, y, preprocessor = preprocess_data(raw_data)
+# Establish connection
+conn = None
+try:
+    conn = snowflake.connector.connect(
+        user=SNOWFLAKE_USER,
+        password=SNOWFLAKE_PASSWORD,
+        account=SNOWFLAKE_ACCOUNT
+    )
+    cursor = conn.cursor()
 
-# Ensure data is not empty
-if X.shape[0] == 0 or y.shape[0] == 0:
-    raise ValueError("No data available after preprocessing!")
+    # Set the database context
+    cursor.execute("USE DATABASE CUSTOMER_CHURN_DB;")
 
-# Split the data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # Load raw data
+    data_file = "data/raw/telco_customer_churn.csv"
+    data = load_data(data_file)
 
-# Train the model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+    # Handle missing or invalid TotalCharges
+    data['TotalCharges'] = data['TotalCharges'].replace(" ", np.nan)  # Replace empty strings with NaN
+    data['TotalCharges'] = pd.to_numeric(data['TotalCharges'], errors='coerce')  # Convert to numeric
+    data = data.where(pd.notnull(data), None)  # Replace NaN with None (SQL NULL)
 
-# Evaluate the model
-y_pred = model.predict(X_test)
-print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
-print(classification_report(y_test, y_pred))
+    # Insert data row-by-row
+    for _, row in data.iterrows():
+        try:
+            cursor.execute(
+                """
+                INSERT INTO CUSTOMER_CHURN (customerID, gender, SeniorCitizen, Partner, Dependents, tenure, PhoneService, MultipleLines, InternetService, OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport, StreamingTV, StreamingMovies, Contract, PaperlessBilling, PaymentMethod, MonthlyCharges, TotalCharges, Churn)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                """,
+                tuple(row)
+            )
+        except snowflake.connector.errors.ProgrammingError as e:
+            print(f"Error inserting row: {row}")
+            print(f"Error message: {e}")
+            continue
 
-# Save the trained model and preprocessor
-with open("models/churn_model.joblib", "wb") as model_file:
-    joblib.dump(model, model_file)
+    print("Processed data successfully loaded into Snowflake!")
 
-with open("models/preprocessor.joblib", "wb") as preprocessor_file:
-    joblib.dump(preprocessor, preprocessor_file)
+except snowflake.connector.errors.Error as e:
+    print(f"Snowflake error: {e}")
 
-print("Model and preprocessor saved!")
+finally:
+    if conn:
+        conn.close()
+        print("Connection closed.")
