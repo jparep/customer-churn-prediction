@@ -29,8 +29,7 @@ try:
     # Handle missing or invalid TotalCharges
     data['TotalCharges'] = data['TotalCharges'].replace(" ", np.nan)  # Replace empty strings with NaN
     data['TotalCharges'] = pd.to_numeric(data['TotalCharges'], errors='coerce')  # Convert to numeric
-    # Optionally, fill NaN with 0 or the mean
-    # data['TotalCharges'] = data['TotalCharges'].fillna(0)
+    data = data.where(pd.notnull(data), None)  # Replace NaN with None (SQL NULL)
 
     # Insert data row-by-row
     for _, row in data.iterrows():
