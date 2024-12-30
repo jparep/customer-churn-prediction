@@ -41,3 +41,8 @@ dist/
 # OS Specific
 .DS_Store
 Thumbs.db
+
+# Ignore Model files
+*.pkl
+*.joblib
+

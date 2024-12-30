@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 import joblib
-from models.preprocessing import load_data, preprocess_data  # Import preprocessing functions
+from preprocessing import load_data, preprocess_data  # Import preprocessing functions
 
 # Load raw data
 raw_data_path = "data/raw/telco_customer_churn.csv"

@@ -25,3 +25,7 @@ Thumbs.db
 
 # Ignore Environment files
 environment.yml
+
+# Ignore model files
+*.pkl
+*.joblib
