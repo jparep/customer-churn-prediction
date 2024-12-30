@@ -1,14 +1,24 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 import pickle
+import pandas as pd
 
-app = Flask(__name__)
+# Create Blueprint for API routes
+api = Blueprint('api', __name__)
 
-# Load the model
-model = pickle.load(open("models/churn_model.pkl", "rb"))
+# Load trained model
+with open("models/churn_model.pkl", "rb") as model_file:
+    model = pickle.load(model_file)
 
-@app.route("/predict", methods=["POST"])
+@api.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json()
-    features = data['features']
-    prediction = model.predict([features])
-    return jsonify({"churn": int(prediction[0])})
+    try:
+        # Get input data
+        data = request.get_json()
+        input_features = pd.DataFrame([data])
+
+        # Predict using the model
+        prediction = model.predict(input_features)
+
+        return jsonify({"churn": int(prediction[0])})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
