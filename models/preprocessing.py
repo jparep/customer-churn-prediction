@@ -53,14 +53,14 @@ def save_preprocessed_data(X, y, output_path):
 
 if __name__ == "__main__":
     # Load raw data
-    raw_data_path = "data/WA_Fn-UseC_-Telco-Customer-Churn.csv"
+    raw_data_path = "data/raw/telco_customer_churn.csv"
     raw_data = load_data(raw_data_path)
 
     # Preprocess data
     X_processed, y, preprocessor = preprocess_data(raw_data)
 
     # Save processed data
-    processed_data_path = "data/processed_data.csv"
+    processed_data_path = "data/processed/processed_data.csv"
     save_preprocessed_data(X_processed, y, processed_data_path)
 
     print(f"Processed data saved to {processed_data_path}")
