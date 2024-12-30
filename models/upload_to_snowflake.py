@@ -1,4 +1,5 @@
 import snowflake.connector
+import pandas as pd
 import os
 
 # Load Snowflake connection settings
@@ -13,12 +14,17 @@ conn = snowflake.connector.connect(
     account=SNOWFLAKE_ACCOUNT
 )
 
-# Read the SQL file
-with open("sql/load_data.sql", "r") as file:
-    sql_script = file.read()
+# Load preprocessed data
+data = pd.read_csv("data/processed_data.csv")
 
-# Execute the SQL script
-cursor = conn.cursor()
-cursor.execute(sql_script)
+# Insert processed data into Snowflake
+for _, row in data.iterrows():
+    conn.cursor().execute(
+        """
+        INSERT INTO CUSTOMER_CHURN (customerID, gender, SeniorCitizen, Partner, Dependents, tenure, PhoneService, MultipleLines, InternetService, OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport, StreamingTV, StreamingMovies, Contract, PaperlessBilling, PaymentMethod, MonthlyCharges, TotalCharges, Churn)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+        """,
+        tuple(row)
+    )
 
-print("Database and table created successfully!")
+print("Processed data successfully loaded into Snowflake!")
