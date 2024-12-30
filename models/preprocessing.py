@@ -44,23 +44,3 @@ def preprocess_data(data):
     X_processed = preprocessor.fit_transform(X)
 
     return X_processed, y, preprocessor  # Return preprocessor for later use
-
-def save_preprocessed_data(X, y, output_path):
-    """Save the preprocessed data to a CSV file."""
-    processed_data = pd.DataFrame(X)
-    processed_data['Churn'] = y.values
-    processed_data.to_csv(output_path, index=False)
-
-if __name__ == "__main__":
-    # Load raw data
-    raw_data_path = "data/raw/telco_customer_churn.csv"
-    raw_data = load_data(raw_data_path)
-
-    # Preprocess data
-    X_processed, y, preprocessor = preprocess_data(raw_data)
-
-    # Save processed data
-    processed_data_path = "data/processed/processed_data.csv"
-    save_preprocessed_data(X_processed, y, processed_data_path)
-
-    print(f"Processed data saved to {processed_data_path}")
