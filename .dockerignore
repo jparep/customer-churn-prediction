@@ -22,3 +22,6 @@ data/
 Thumbs.db
 .vscode/
 .idea/
+
+# Ignore Environment files
+environment.yml
