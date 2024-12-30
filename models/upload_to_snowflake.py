@@ -1,4 +1,6 @@
 import snowflake.connector
+import pandas as pd
+import numpy as np
 import os
 from preprocessing import load_data
 
@@ -20,11 +22,17 @@ try:
     # Set the database context
     cursor.execute("USE DATABASE CUSTOMER_CHURN_DB;")
 
-    # Load and preprocess data
+    # Load raw data
     data_file = "data/raw/telco_customer_churn.csv"
-    data = load_data(data_file)  # Ensure load_data includes any necessary preprocessing
+    data = load_data(data_file)
 
-    # Insert data row-by-row (consider batch loading for large datasets)
+    # Handle missing or invalid TotalCharges
+    data['TotalCharges'] = data['TotalCharges'].replace(" ", np.nan)  # Replace empty strings with NaN
+    data['TotalCharges'] = pd.to_numeric(data['TotalCharges'], errors='coerce')  # Convert to numeric
+    # Optionally, fill NaN with 0 or the mean
+    # data['TotalCharges'] = data['TotalCharges'].fillna(0)
+
+    # Insert data row-by-row
     for _, row in data.iterrows():
         try:
             cursor.execute(
