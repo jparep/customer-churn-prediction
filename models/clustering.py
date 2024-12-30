@@ -1,23 +1,23 @@
-from sklearn.cluster import KMeans
 import pandas as pd
+from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
 # Load data
-data = pd.read_csv("data/processed_data.csv")
+customer_data = pd.read_csv("data/processed_data.csv")
 
 # Features for clustering
-features = data[['tenure', 'MonthlyCharges']]
+features = customer_data[['tenure', 'MonthlyCharges']]
 
-# Perform K-Means clustering
+# Perform KMeans clustering
 kmeans = KMeans(n_clusters=3, random_state=42)
-data['cluster'] = kmeans.fit_predict(features)
+customer_data['Cluster'] = kmeans.fit_predict(features)
 
-# Save results
-data.to_csv("data/segmented_data.csv", index=False)
+# Save clustered data
+customer_data.to_csv("data/processed_data_clustered.csv", index=False)
 
-# Plot clusters
-plt.scatter(data['tenure'], data['MonthlyCharges'], c=data['cluster'])
-plt.title("Customer Segments")
-plt.xlabel("Tenure")
-plt.ylabel("Monthly Charges")
+# Visualize clusters
+plt.scatter(customer_data['tenure'], customer_data['MonthlyCharges'], c=customer_data['Cluster'])
+plt.xlabel('Tenure')
+plt.ylabel('Monthly Charges')
+plt.title('Customer Clusters')
 plt.show()
