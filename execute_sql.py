@@ -10,7 +10,8 @@ SNOWFLAKE_ACCOUNT = os.getenv("SNOWFLAKE_ACCOUNT")
 conn = snowflake.connector.connect(
     user=SNOWFLAKE_USER,
     password=SNOWFLAKE_PASSWORD,
-    account=SNOWFLAKE_ACCOUNT
+    account=SNOWFLAKE_ACCOUNT,
+    session_parameters={"MULTI_STATEMENT_COUNT": 3}  # Enable multi-statement execution
 )
 
 # Read the SQL file
