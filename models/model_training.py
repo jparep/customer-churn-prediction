@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score, classification_report
 import joblib
 
 # Load data
-data = pd.read_csv("data/processed_data.csv")
+data = pd.read_csv("data/processed/processed_data.csv")
 
 # Preprocessing
 X = data.drop(columns=['Churn', 'customerID'])
@@ -32,5 +32,5 @@ print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
 print(classification_report(y_test, y_pred))
 
 # Save model
-with open("models/churn_model.pkl", "wb") as model_file:
+with open("models/churn_model.joblib", "wb") as model_file:
     joblib.dump(best_model, model_file)
