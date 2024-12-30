@@ -14,12 +14,16 @@ conn = snowflake.connector.connect(
     account=SNOWFLAKE_ACCOUNT
 )
 
+# Set the database context
+cursor = conn.cursor()
+cursor.execute("USE DATABASE CUSTOMER_CHURN_DB;")
+
 # Load preprocessed data
 data = pd.read_csv("data/processed_data.csv")
 
 # Insert processed data into Snowflake
 for _, row in data.iterrows():
-    conn.cursor().execute(
+    cursor.execute(
         """
         INSERT INTO CUSTOMER_CHURN (customerID, gender, SeniorCitizen, Partner, Dependents, tenure, PhoneService, MultipleLines, InternetService, OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport, StreamingTV, StreamingMovies, Contract, PaperlessBilling, PaymentMethod, MonthlyCharges, TotalCharges, Churn)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
