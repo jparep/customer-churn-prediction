@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">Welcome to the Churn Prediction App</h2>
-<a href="/predict" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Make a Prediction</a>
+<div class="max-w-3xl mx-auto py-8">
+    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">
+        Welcome to the Churn Prediction App
+    </h2>
+    <div class="text-center">
+        <a href="/predict" 
+           class="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 transition duration-200">
+           Make a Prediction
+        </a>
+    </div>
+</div>
 {% endblock %}
