@@ -3,10 +3,19 @@
 <h2 class="text-2xl font-bold mb-4">Enter Customer Data</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
+    
     <div class="mb-4">
-        {{ form.customer_data.label(class="block text-sm font-medium") }}
-        {{ form.customer_data(class="mt-1 p-2 border rounded w-full") }}
+        {{ form.customer_data.label(class="block text-sm font-medium text-gray-700") }}
+        {{ form.customer_data(class="mt-1 p-2 border border-gray-300 rounded w-full focus:ring-blue-500 focus:border-blue-500") }}
+        {% if form.customer_data.errors %}
+            <p class="text-red-600 text-sm mt-1">
+                {{ form.customer_data.errors[0] }}
+            </p>
+        {% endif %}
     </div>
-    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
+    
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">
+        Submit
+    </button>
 </form>
 {% endblock %}
