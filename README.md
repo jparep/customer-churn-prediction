@@ -1,7 +1,7 @@
 # **Customer Churn Prediction for Subscription Business**
 
 ## **Project Overview**
-This project predicts customer churn for a subscription-based business using machine learning and provides actionable insights for targeted retention strategies. The solution integrates data preprocessing, machine learning, clustering, and visualization using modern tools like Snowflake, Flask, Docker, and Tableau.
+This project predicts customer churn for a subscription-based business using machine learning and provides actionable insights for targeted retention strategies. The solution integrates data preprocessing, machine learning, clustering, and visualization using modern tools like Snowflake, Flask, Docker, and Power BI.
 
 ---
 

@@ -7,6 +7,7 @@ api = Blueprint('api', __name__)
 
 # Load trained model
 def load_model():
+    """Load data from disk."""
     try:
         return joblib.load("models/churn_model.joblib")
     except Exception as e:
